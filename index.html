@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blackjack</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', Arial, sans-serif;
+            background-image: url("table.png");
+            background-size: cover;
+            font-weight: bold;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            height: 100vh;
+        }
+
+        .container {
+            background: rgba(0, 0, 0, 0.533);
+            padding: 2rem;
+            border-radius: 3px;
+        }
+
+        h1 {
+            color: goldenrod;
+        }
+
+        #message-el {
+            font-style: italic;
+        }
+
+        button {
+            color: #000000;
+            width: 150px;
+            background: goldenrod;
+            padding-top: 5px;
+            padding-bottom: 5px;
+            font-weight: bold;
+            border: none;
+            border-radius: 2px;
+            margin-bottom: 2px;
+            margin-top: 2px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Blackjack</h1>
+        <p id="message-el">Want to play a round?</p>
+        <p id="cards-el">Cards:</p>
+        <p id="sum-el">Sum:</p>
+        <button onclick="startGame()" id="startBtn">START GAME</button>
+        <button onclick="newCard()" id="newCardBtn">NEW CARD</button>
+        <p id="player-el"></p>
+        <script src="index.js"></script>
+    </div>
+</body>
+
+<script>
+    let player = {
+        name: "Per",
+        chips: 200
+    }
+
+    let cards = []
+    let sum = 0
+    let hasBlackJack = false
+    let isAlive = false
+    let message = ""
+    let messageEl = document.getElementById("message-el")
+    let sumEl = document.getElementById("sum-el")
+    let cardsEl = document.getElementById("cards-el")
+    let playerEl = document.getElementById("player-el")
+
+    playerEl.textContent = player.name + ": $" + player.chips
+
+    function getRandomCard() {
+        let randomNumber = Math.floor(Math.random() * 13) + 1
+        if (randomNumber > 10) {
+            return 10
+        } else if (randomNumber === 1) {
+            return 11
+        } else {
+            return randomNumber
+        }
+    }
+
+    function startGame() {
+        isAlive = true
+        let firstCard = getRandomCard()
+        let secondCard = getRandomCard()
+        cards = [firstCard, secondCard]
+        sum = firstCard + secondCard
+        renderGame()
+    }
+
+    function renderGame() {
+        cardsEl.textContent = "Cards: "
+        for (let i = 0; i < cards.length; i++) {
+            cardsEl.textContent += cards[i] + " "
+        }
+
+        sumEl.textContent = "Sum: " + sum
+        if (sum <= 20) {
+            message = "Do you want to draw a new card?"
+        } else if (sum === 21) {
+            message = "You've got Blackjack!"
+            hasBlackJack = true
+        } else {
+            message = "You're out of the game!"
+            isAlive = false
+        }
+        messageEl.textContent = message
+    }
+
+
+    function newCard() {
+        if (isAlive === true && hasBlackJack === false) {
+            let card = getRandomCard()
+            sum += card
+            cards.push(card)
+            renderGame()
+        }
+    }
+
+</script>
+
+</html>
